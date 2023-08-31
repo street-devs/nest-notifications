@@ -114,5 +114,31 @@ export class OrderStatusUpdatedSlackChannel extends NotificationChannel {
       .send(this.getDataToBroadcast(notification))
   }
 }
+```
 
+### And for now, you can easily broadcast your notification from your service handler
+
+```
+import { Injectable } from '@nestjs/common'
+import { NotificationService } from '@street-devs/nest-notifications'
+import { OrderStatusUpdated } from './order-status-updated.notification'
+
+@Injectable()
+export class UpdateOrderStatusService {
+  public constructor(
+    private readonly _notificationService: NotificationService
+  ) {}
+
+  public async setOrderStatus(
+    order: OrderEntity,
+    status: string
+  ): Promise<void> {
+    // your service logic here
+
+    // send notification
+    await this._notificationService.send(
+      new OrderStatusUpdated({ order, status })
+    )
+  }
+}
 ```
