@@ -25,13 +25,19 @@ export class NotificationService {
 
     return Promise.all(
       channels.map((channel) => this.sendToChannel(channel, notification))
+    ).then(
+      (responses) => responses.filter(Boolean) as ISendNotificationResponse[]
     )
   }
 
   public async sendToChannel(
     channel: Type<NotificationChannel>,
     notification: Notification
-  ): Promise<ISendNotificationResponse> {
+  ): Promise<ISendNotificationResponse | void> {
+    if (!notification.shouldNotify()) {
+      return
+    }
+
     const resolvedChannel = await this.getChannel(channel)
 
     return resolvedChannel
