@@ -34,7 +34,7 @@ export class NotificationService {
     channel: Type<NotificationChannel>,
     notification: Notification
   ): Promise<ISendNotificationResponse | void> {
-    if (!notification.shouldNotify()) {
+    if (!(await notification.shouldNotify())) {
       return
     }
 
